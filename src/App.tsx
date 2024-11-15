@@ -46,6 +46,13 @@ export default function App() {
     });
   };
 
+  // "A: No
+
+  // Explanation: According to context information, it is stated that "The value of the square root of 16 is a rational number since it can be represented in the form of p/q.... Hence, the square root of 16 is equal to 4." This suggests that the square root of 16 is indeed equal to 4, not 5."
+
+  // "A: true
+
+  // Explanation: Based on the provided context information, it is stated that "The Earth is the third planet from the Sun in our solar system. It follows Mercury and Venus based on proximity to the Sun." Additionally, it is mentioned that "Detailed studies of our solar system confirm this", and "The statement that the Earth is the third planet from the Sun is indeed true"."
   const onSubmit = async (data: IAiSettlementOracleFormValues) => {
     try {
       setIsSubmit(true);
@@ -69,7 +76,9 @@ export default function App() {
       const answers = getValues('answers');
       const fuse = new Fuse(answers, { keys: ['value'] });
 
-      const answer = appState.aiOutput.match(/(.*?)(?=,)/);
+      const answer = appState.aiOutput.match(/A:\s*(.*?)\n\nExplanation/);
+
+      console.log(answer);
 
       if (answer && answer.length > 1) {
         const result = fuse.search(answer[1]);
@@ -161,7 +170,7 @@ export default function App() {
                       }
                     }}
                     onClick={() => {
-                      if (fields.length < 5) {
+                      if (fields.length < 2) {
                         append({ value: '' });
                       }
                     }}
