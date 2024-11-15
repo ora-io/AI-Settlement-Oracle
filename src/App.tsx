@@ -1,12 +1,13 @@
 import Fuse from 'fuse.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Input, Box, Button, Typography, InputBase } from '@mui/material';
+import { Input, Box, Button, Typography, InputBase, Link } from '@mui/material';
 import { useAppState, useSetIsSubmit, useSetAiOutput, useSetRequestId, useSetSelectAnswer } from '@/store/app/hooks';
 
 import services, { evmService } from '@/services';
+import { IGenerateData } from '@/services/searchService/types';
 import { AISETTLEMENTORACLE_FORM_DEFAULT_VALUES, IAiSettlementOracleFormValues } from '@/constants/config';
 
 import MinusSVG from '@/assets/minus.svg?react';
@@ -19,6 +20,7 @@ export default function App() {
   const setAiOutput = useSetAiOutput();
   const setRequestId = useSetRequestId();
   const setSelectAnswer = useSetSelectAnswer();
+  const [serviceData, setServiceData] = useState<IGenerateData>();
   const { handleSubmit, control, register, reset, setValue, getValues } = useForm<IAiSettlementOracleFormValues>({
     defaultValues: {
       question: '',
@@ -33,6 +35,7 @@ export default function App() {
 
   const handleClickSurpriseMe = () => {
     setValue('answers', [{ value: '' }]);
+    setServiceData(undefined);
 
     const data =
       AISETTLEMENTORACLE_FORM_DEFAULT_VALUES[Math.floor(Math.random() * AISETTLEMENTORACLE_FORM_DEFAULT_VALUES.length)];
@@ -59,11 +62,16 @@ export default function App() {
       setAiOutput('');
       setRequestId('');
       setSelectAnswer('');
+      setServiceData(undefined);
       const user_input = `Q: ${data.question} ${data.answers.map((answer) => answer.value).join(' / ')}`;
 
+      console.log('user_input', user_input);
       const searchData = await services.search.generate({
         user_input
       });
+      console.log('searchData', searchData);
+
+      setServiceData(searchData);
 
       await evmService.ora.calculateAIResult({ prompt: searchData.prompt });
     } catch (error) {
@@ -234,6 +242,7 @@ export default function App() {
               }}
               onClick={() => {
                 setIsSubmit(false);
+                setServiceData(undefined);
                 reset();
               }}
             >
@@ -267,6 +276,19 @@ export default function App() {
               </Typography>
             </LoadingButton>
           )}
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '40px' }}>
+          {serviceData?.search_result.map((item) => {
+            return (
+              <Box sx={{ borderBottom: '1px solid #cccccc66', padding: '0.5rem 0' }}>
+                <Typography>{item.context}</Typography>
+                <Link href={item.url} target="_blank" sx={{ color: '#7664ea' }}>
+                  {item.source_from}
+                </Link>
+              </Box>
+            );
+          })}
         </Box>
       </form>
     </Box>
