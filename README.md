@@ -16,8 +16,6 @@ VITE_SEARCH_APIKEY="xxxxxxx"
 
 # Code Structure
 
-Here is the translated structure in English:
-
 - **assets**: Stores image, SVG resources.
 
 - **constants**
