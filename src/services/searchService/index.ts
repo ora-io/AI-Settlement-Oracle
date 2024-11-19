@@ -9,6 +9,6 @@ export default class SearchService {
   }
 
   async generate(data: IGenerateRequest): Promise<IGenerateResponse> {
-    return await this.apiClient.post<IGenerateRequest, IGenerateResponse>(`/api/search-and-generate_tof`, data);
+    return await this.apiClient.post<IGenerateRequest, IGenerateResponse>(`api/search-and-generate_yon`, data);
   }
 }
