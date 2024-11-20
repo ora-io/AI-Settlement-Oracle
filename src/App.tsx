@@ -138,7 +138,7 @@ export default function App() {
 
         {fields.map((field, index) => (
           <InputBase
-            key={field.id}
+            key={index}
             {...register(`answers.${index}.value`, { required: true })}
             style={{ fontSize: '1rem', padding: '0', width: '100%' }}
             sx={{
