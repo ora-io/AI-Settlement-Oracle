@@ -98,4 +98,4 @@ For major changes, please open an issue to discuss your ideas before implementat
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
